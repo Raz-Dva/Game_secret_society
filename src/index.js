@@ -114,17 +114,17 @@ function create() {
     timeline.play();
 
     // ------------------------------------------------------------
-    const curtain = () => {
-            // timeline.add({
-            //     targets: r5,
-            //     alpha: 1,
-            //     // ease: 'Power1',
-            //     // duration: 3000,
-            //     // offset: 3000
-            // });
-            // timeline.play();
-        }
-        // ------------------------------------------------------------
+    // const curtain = () => {
+    //         timeline.add({
+    //             targets: r5,
+    //             alpha: 1,
+    //             // ease: 'Power1',
+    //             // duration: 3000,
+    //             // offset: 3000
+    //         });
+    //         timeline.play();
+    //     }
+    // ------------------------------------------------------------
 
 
     // this.add.sprite(50, 210, 'circle_1')
