@@ -1,12 +1,18 @@
 import Phaser, { Game } from 'phaser';
 var config = {
     type: Phaser.AUTO,
-    width: 1075,
+    width: 1075, // add CONST width and height
     height: 767,
     // physics: {
     //     default: 'arcade',
     //     arcade: {
     //         gravity: { y: 100 }
+    //     }
+    // },
+    // physics: {
+    //     default: 'matter',
+    //     matter: {
+    //         debug: true
     //     }
     // },
     scene: {
@@ -16,6 +22,7 @@ var config = {
 };
 
 const game = new Phaser.Game(config);
+
 const countDogs = 5;
 let counterClick = 0;
 const positionsDogs = [
@@ -52,14 +59,12 @@ function preload() {
     for (let i = 0; i < circleAnimation.length; i++) {
         this.load.image(circleAnimation[i], `./assets/${circleAnimation[i]}.png`);
     }
-
     // ------------------------------
 }
 
 function create() {
-
-
     this.add.image(537, 383, 'background');
+    // ------------------------------------------------------------
 
     this.anims.create({
         key: 'circle_around',
@@ -86,9 +91,7 @@ function create() {
             .on('pointerdown', function(pointer) {
                 this.setTint(0xff0000);
                 counterClick += 1;
-
                 animationAround(positionsDogs[i].x, positionsDogs[i].y)
-
                 if (counterClick == countDogs) {
                     curtain()
                 }
@@ -98,14 +101,35 @@ function create() {
         if (scaleImg) dog.setScale(scaleImg);
         if (flipXImg) dog.setFlipX(flipXImg);
     }
+    // ------------------------------------------------------------
 
+    // var t = this.add.rectangle((1075 / 2), (767 / 2), 1075, 767, 0x000000);
+    // t.alpha = 0.5;
 
+    // var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
+    // var text = this.add.text((1075 / 2), (767 / 2), "- phaser -\nwith a sprinkle of\npixi dust", style);
+    // text.anchor.set(0.5);
+    // text.alpha = 0;
+    // this.tweens.add({
+    //     targets: t,
+    //     alpha: 0,
+    //     duration: 0,
+    //     offset: 4000,
+
+    //     ease: 'Power2'
+    // }, this);
+    // this.add.tween(text).to({ alpha: 0 }, 2000, "Linear", true);
 
     // ------------------------------------------------------------
-    var r5 = this.add.rectangle((1075 / 2), (767 / 2), 1075, 767, 0x000000, .9);
+    const startBlackout = this.add.rectangle((1075 / 2), (767 / 2), 1075, 767, 0x000000, 0.9);
+    // startBlackout.setDepth(1);
+    startBlackout.setInteractive()
+        // scene.input.setTopOnly(true)
+        // startBlackout.on('pointerdown', function(pointer, localX, localY, event) {})
+
     var timeline = this.tweens.timeline()
     timeline.add({
-        targets: r5,
+        targets: startBlackout,
         alpha: 0,
         // ease: 'Power1',
         // duration: 3000,
@@ -113,26 +137,39 @@ function create() {
     });
     timeline.play();
 
-    // ------------------------------------------------------------
-    // const curtain = () => {
-    //         timeline.add({
-    //             targets: r5,
-    //             alpha: 1,
-    //             // ease: 'Power1',
-    //             // duration: 3000,
-    //             // offset: 3000
-    //         });
-    //         timeline.play();
-    //     }
-    // ------------------------------------------------------------
+    var curtain = () => {
+        var timeline = this.tweens.timeline()
+        timeline.add({
+            targets: startBlackout,
+            alpha: 1,
+            // ease: 'Power1',
+            // duration: 2000,
+            // offset: 3000
+        });
+        timeline.play();
+        console.log('curtain')
 
+    };
+
+    // ------------------------------------------------------------
+    // const startBlackout = this.add.rectangle((1075 / 2), (767 / 2), 1075, 767, 0x000000, 0.9);
+    // const timeline = this.tweens.timeline()
+    // timeline.add({
+    //     targets: startBlackout,
+    //     alpha: 0.1,
+    //     // ease: 'Power1',
+    //     duration: 13000,
+    //     offset: 3000
+    // });
+    // timeline.play();
+
+
+
+
+    // ------------------------------------------------------------
 
     // this.add.sprite(50, 210, 'circle_1')
     //     .play('circle_around');
-
-
-
-
     // for (let i = 0; i < circleAnimation.length; i++) {
     //     for (let j = 0; j < positionsDogs.length; j++) {
 
@@ -140,11 +177,6 @@ function create() {
     //     this.add.image(positionsDogs[i].x, positionsDogs[i].y, circleAnimation[i]);
     // }
 
-    // var dog2 = this.add.image(100, 383, 'dog1').setInteractive();
-    // var dog3 = this.add.image(200, 383, 'dog2').setInteractive();
-    // var dog4 = this.add.image(300, 383, 'dog3').setInteractive();
-    // var dog5 = this.add.image(400, 383, 'dog4').setInteractive();
-    // var dog6 = this.add.image(500, 383, 'dog5').setInteractive();
 
     // dog2.on('pointerdown', function(pointer) {
     //     console.log('dog')
@@ -153,16 +185,7 @@ function create() {
 
     // });
 
-    // dog2.on('pointerout', function(pointer) {
 
-    //     this.clearTint();
-
-    // });
-    // dog2.on('pointerup', function(pointer) {
-
-    //     this.clearTint();
-
-    // });
     // var particles = this.add.particles('red');
 
     // var emitter = particles.createEmitter({
