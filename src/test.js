@@ -1,1 +1,0 @@
-export default function log(){console.log('Log from test.js')}
