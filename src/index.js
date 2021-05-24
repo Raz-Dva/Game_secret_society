@@ -23,7 +23,7 @@ var config = {
 
 const game = new Phaser.Game(config);
 
-const countDogs = 5;
+const CountDogs = 5;
 let counterClick = 0;
 const positionsDogs = [
     { x: 50, y: 210, scale: .8, flipX: true },
@@ -51,8 +51,11 @@ const circleAnimation = [
 function preload() {
 
     this.load.image('background', './assets/back_five_dogs.jpg');
+    this.load.image('buttonPlay', './assets/btn.png');
+    this.load.image('char', './assets/char.png');
+    this.load.image('logo', './assets/logo.png');
 
-    for (let i = 0; i < countDogs; i++) {
+    for (let i = 0; i < CountDogs; i++) {
         this.load.image('dog' + i, './assets/doggy.png');
     }
     // ------------------------------
@@ -60,6 +63,7 @@ function preload() {
         this.load.image(circleAnimation[i], `./assets/${circleAnimation[i]}.png`);
     }
     // ------------------------------
+    this.load.image('dogText', './assets/doggy.png')
 }
 
 function create() {
@@ -85,14 +89,15 @@ function create() {
         this.add.sprite(x, y, 'circle_1').play('circle_around');
     }
 
-    for (let i = 0; i < countDogs; i++) {
+    for (let i = 0; i < CountDogs; i++) {
         let dog = this.add.image(positionsDogs[i].x, positionsDogs[i].y, 'dog' + i)
             .setInteractive()
             .on('pointerdown', function(pointer) {
-                this.setTint(0xff0000);
+                // this.setTint(0xff0000);
+                animationAround(positionsDogs[i].x, positionsDogs[i].y);
+
                 counterClick += 1;
-                animationAround(positionsDogs[i].x, positionsDogs[i].y)
-                if (counterClick == countDogs) {
+                if (counterClick === CountDogs) {
                     curtain()
                 }
             })
@@ -106,7 +111,7 @@ function create() {
     // var t = this.add.rectangle((1075 / 2), (767 / 2), 1075, 767, 0x000000);
     // t.alpha = 0.5;
 
-    // var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
+    // var style = { font: "65px Arial", fill: "#fff", align: "center" };
     // var text = this.add.text((1075 / 2), (767 / 2), "- phaser -\nwith a sprinkle of\npixi dust", style);
     // text.anchor.set(0.5);
     // text.alpha = 0;
@@ -121,15 +126,54 @@ function create() {
     // this.add.tween(text).to({ alpha: 0 }, 2000, "Linear", true);
 
     // ------------------------------------------------------------
-    const startBlackout = this.add.rectangle((1075 / 2), (767 / 2), 1075, 767, 0x000000, 0.9);
-    // startBlackout.setDepth(1);
+    const startBlackout = this.add.rectangle((1075 / 2), (767 / 2), 1075, 767, 0x000000, 0.9); // изменить размер окна на const
+    startBlackout.setDepth(1);
     startBlackout.setInteractive()
-        // scene.input.setTopOnly(true)
-        // startBlackout.on('pointerdown', function(pointer, localX, localY, event) {})
 
-    var timeline = this.tweens.timeline()
+    const style = { font: "Bold 65px Arial", fill: "#fff", align: "left" };
+    const text = this.add.text((1075 / 2), (767 / 2), "5 Hidden dogs \nCan you spot them?", style); // изменить размер окна на const
+    text.setOrigin(.5, .5);
+    text.setDepth(1);
+
+    // buttonPlay
+    // scene.input.setTopOnly(true)
+    // startBlackout.on('pointerdown', function(pointer, localX, localY, event) {})
+    const dogT = this.add.image(800, 320, 'dogText')
+    dogT.setDepth(1);
+    dogT.setFlipX(true);
+
+
+    const buttonPlay = this.add.image((1075 / 2), (767 / 1.2), 'buttonPlay'); // изменить позиционирование на const
+    buttonPlay.setInteractive()
+    buttonPlay.setDepth(1);
+    buttonPlay.on('pointerdown', function(pointer) {
+        window.open('https://www.g5e.com/', '_blank');
+    })
+
+
+    const styleTextBtn = {
+        font: "Bold 45px Arial",
+        fill: "#FCF2ACFF",
+        align: "center",
+        shadow: {
+            offsetX: 2,
+            offsetY: 1,
+            color: '#000',
+            blur: 3,
+            stroke: true,
+            fill: true
+        },
+    };
+    const textButton = this.add.text((1075 / 2), (767 / 1.2), "Play Now", styleTextBtn); // изменить размер окна на const
+    textButton.setOrigin(.5, .5);
+    textButton.setDepth(1);
+    // var camera = scene.cameras.main
+
+
+    // console.log(camera.zoom);
+    let timeline = this.tweens.timeline()
     timeline.add({
-        targets: startBlackout,
+        targets: [startBlackout, text, dogT, buttonPlay, textButton],
         alpha: 0,
         // ease: 'Power1',
         // duration: 3000,
@@ -137,10 +181,29 @@ function create() {
     });
     timeline.play();
 
-    var curtain = () => {
-        var timeline = this.tweens.timeline()
+    // -----------------------------------------------------------------------------
+
+    const curtain = () => {
+        // const char = this.add.image((1075 / 4), (767 / 2), 'char');
+        const char = this.add.image(-50, 767, 'char');
+
+        char.setOrigin(0, 1);
+        const logo = this.add.image((1075 / 2), (767 / 5), 'logo');
+
+        // char.height = 200;
+        // char.setSize(200, 200)
+        // char.displayWidth = 200
+        char.setScale(.8)
+
+
+        char.setDepth(1);
+        logo.setDepth(1);
+        char.alpha = 0
+        logo.alpha = 0
+
+        timeline = this.tweens.timeline()
         timeline.add({
-            targets: startBlackout,
+            targets: [startBlackout, char, logo],
             alpha: 1,
             // ease: 'Power1',
             // duration: 2000,
@@ -150,6 +213,22 @@ function create() {
         console.log('curtain')
 
     };
+
+
+
+    // text.anchor.set(0.5);
+    // text.alpha = 0;
+    // this.tweens.add({
+    //     targets: t,
+    //     alpha: 0,
+    //     duration: 0,
+    //     offset: 4000,
+
+    //     ease: 'Power2'
+    // }, this);
+    // this.add.tween(text).to({ alpha: 0 }, 2000, "Linear", true);
+
+    // ------------------------------------------------------------
 
     // ------------------------------------------------------------
     // const startBlackout = this.add.rectangle((1075 / 2), (767 / 2), 1075, 767, 0x000000, 0.9);
